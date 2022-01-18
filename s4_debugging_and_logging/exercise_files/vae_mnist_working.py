@@ -7,7 +7,7 @@ A simple implementation of Gaussian MLP Encoder and Decoder trained on MNIST
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, TensorDataset
 from torchvision.datasets import MNIST
 from torchvision.utils import save_image
 
@@ -27,10 +27,14 @@ epochs = 5
 mnist_transform = transforms.Compose([transforms.ToTensor()])
 
 train_dataset = MNIST(dataset_path, transform=mnist_transform, train=True, download=True)
-test_dataset  = MNIST(dataset_path, transform=mnist_transform, train=False, download=True)
-
+train_dataset_optimized = TensorDataset(train_dataset.data.clone().detach().to(torch.float32), train_dataset.targets.clone().detach())
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+#train_loader = DataLoader(dataset=train_dataset_optimized, batch_size=batch_size, shuffle=True)
+
+test_dataset  = MNIST(dataset_path, transform=mnist_transform, train=False, download=True)
+test_dataset_optimized = TensorDataset(test_dataset.data.clone().detach().to(torch.float32), test_dataset.targets.clone().detach())
 test_loader  = DataLoader(dataset=test_dataset,  batch_size=batch_size, shuffle=False)
+#test_loader = DataLoader(dataset=test_dataset_optimized,  batch_size=batch_size, shuffle=False)
 
 class Encoder(nn.Module):  
     def __init__(self, input_dim, hidden_dim, latent_dim):
