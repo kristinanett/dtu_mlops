@@ -1,0 +1,1 @@
+The labeled faces in the wild (LFW) dataset should be extracted into this folder.
